@@ -110,6 +110,9 @@ def api_delete(endpoint, item_id):
 
 def formatear_moneda(monto):
     """Formatea un monto como moneda paraguaya (Guaraníes)"""
+    # Convertir a float si es string
+    if isinstance(monto, str):
+        monto = float(monto)
     return f"₲ {monto:,.0f}".replace(",", ".")
 
 
@@ -328,8 +331,8 @@ def mostrar_transacciones():
         st.subheader(f"📋 Transacciones ({len(transacciones)} encontradas)")
         
         # Resumen
-        ingresos = sum(t['monto'] for t in transacciones if t['tipo'] == 'ingreso')
-        gastos = sum(t['monto'] for t in transacciones if t['tipo'] == 'gasto')
+        ingresos = sum(float(t['monto']) for t in transacciones if t['tipo'] == 'ingreso')
+        gastos = sum(float(t['monto']) for t in transacciones if t['tipo'] == 'gasto')
         
         col1, col2, col3 = st.columns(3)
         col1.metric("Total Ingresos", formatear_moneda(ingresos))
